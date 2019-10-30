@@ -10,6 +10,7 @@ else IS_ROOT=false; SUDOX="sudo "; fi
 ROOT_GROUP="root"
 
 get_platform_params() {
+	set -x
 	# Test which platform this script is being run on
 	# When adding another supported platform, also add detection for the install command
 	# HOST_PLATFORM:  Name of the platform
@@ -48,6 +49,7 @@ get_platform_params() {
 		exit 1
 		;;
 	esac
+	set +x
 }
 
 install_package_linux() {
@@ -129,6 +131,28 @@ disable_npm_audit() {
 		# Append the line to disable audit
 		append_to_file "# disable npm audit warnings" .npmrc
 		append_to_file "audit=false" .npmrc
+	fi
+	# Make sure that npm can access the .npmrc
+	if [ "$HOST_PLATFORM" = "osx" ]; then
+		$SUDOX chown -R $USER .npmrc
+	else
+		$SUDOX chown -R $USER:$USER .npmrc
+	fi
+}
+
+set_npm_python() {
+	# Make sure the npmrc file exists
+	$SUDOX touch .npmrc
+	# If .npmrc does not contain "python=", we need to change it
+	$SUDOX grep -q -E "^python=" .npmrc &> /dev/null
+	if [ $? -ne 0 ]; then
+		# Remember its contents (minus any possible audit=true)
+		NPMRC_FILE=$($SUDOX grep -v -E "^python=" .npmrc)
+		# And write it back
+		write_to_file "$NPMRC_FILE" .npmrc
+		# Append the line to change the python binary
+		append_to_file "# change link from python3 to python2.7 (needed for gyp)" .npmrc
+		append_to_file "python=$(which python2)" .npmrc
 	fi
 	# Make sure that npm can access the .npmrc
 	if [ "$HOST_PLATFORM" = "osx" ]; then
@@ -706,6 +730,11 @@ print_step "Installing ioBroker" 3 "$NUM_STEPS"
 # Disable any warnings related to "npm audit fix"
 disable_npm_audit
 
+if [ "$HOST_PLATFORM" = "freebsd" ]; then
+	# Make sure we use the correct python binary
+	set_npm_python
+fi
+
 # download the installer files and run them
 # If this script is run as root, we need the --unsafe-perm option
 if [ "$IS_ROOT" = true ]; then
@@ -920,7 +949,7 @@ elif [ "$INITSYSTEM" = "rc.d" ]; then
 
 	# Write an rc.d service that automatically detects the correct node executable and runs ioBroker
 	RCD_FILE=$(cat <<- EOF
-		#!/bin/sh
+		#!$BASH_CMDLINE
 		#
 		# PROVIDE: iobroker
 		# REQUIRE: DAEMON
@@ -939,19 +968,19 @@ elif [ "$INITSYSTEM" = "rc.d" ]; then
 		PIDF=$CONTROLLER_DIR/lib/iobroker.pid
 		NODECMD=\`which node\`
 
-		iobroker_start ()
+		iobroker_start()
 		{
-			su -m $IOB_USER -s "$BASH_CMDLINE" -c "\${NODECMD} ${CONTROLLER_DIR}/iobroker.js start"
+			iobroker start
 		}
 
-		iobroker_stop ()
+		iobroker_stop()
 		{
-			su -m $IOB_USER -s "$BASH_CMDLINE" -c "\${NODECMD} ${CONTROLLER_DIR}/iobroker.js stop"
+			iobroker stop
 		}
 
-		iobroker_status ()
+		iobroker_status()
 		{
-			su -m $IOB_USER -s "$BASH_CMDLINE" -c "\${NODECMD} ${CONTROLLER_DIR}/iobroker.js status"
+			iobroker status
 		}
 
 		PATH="\${PATH}:/usr/local/bin"
