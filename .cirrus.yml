@@ -1,6 +1,9 @@
 freebsd_instance:
   image_family: freebsd-12-0
 
+env:
+  CIRRUS_SHELL: /bin/bash
+
 task:
   prepare_install_script:
     - mkdir -p node_modules/iobroker
