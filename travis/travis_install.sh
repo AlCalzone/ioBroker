@@ -1,6 +1,3 @@
-#!/bin/bash
-set -x
-
 export NPM=$(which npm)
 export NPM_MAJOR=$($NPM -v | cut -d. -f1)
 export NPM_MINOR=$($NPM -v | cut -d. -f2)
