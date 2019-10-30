@@ -4,8 +4,12 @@ freebsd_instance:
 task:
   prepare_install_script:
     - mkdir -p node_modules/iobroker
-    - shopt -s extglob
-    - mv !(node_modules|test|travis|fix_installation.sh) node_modules/iobroker/ || true
+    - mv doc node_modules/iobroker
+    - mv img node_modules/iobroker
+    - mv install node_modules/iobroker
+    - mv lib node_modules/iobroker
+    - mv wiki node_modules/iobroker
+    - mv package.json node_modules/iobroker
   install_script:
     - sudo chmod +x travis/travis_install.sh
     # make sure the iob_not_installed file can be created
