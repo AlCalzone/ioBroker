@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 export NPM=$(which npm)
 export NPM_MAJOR=$($NPM -v | cut -d. -f1)
