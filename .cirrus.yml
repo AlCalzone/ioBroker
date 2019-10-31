@@ -3,9 +3,7 @@ freebsd_instance:
  
 task:
   prepare_install_script:
-    - pkg search node-10
-    - node_ver=`pkg search node-10 | cut -d" " -f1`
-    - pkg install -y bash "$node_ver" npm
+    - pkg install -y bash node-10.16.3 npm
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker
     - mv img node_modules/iobroker
