@@ -1,4 +1,4 @@
-IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
+IOB_DIR=`[ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker"`
 cd $IOB_DIR
 
 # We don't care about permissions now :D
