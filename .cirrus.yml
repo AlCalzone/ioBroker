@@ -2,9 +2,8 @@ freebsd_instance:
   image_family: freebsd-12-0
  
 task:
-  install_bash_script:
-    - pkg install -y bash
   prepare_install_script:
+    - pkg install -y bash node npm
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker
     - mv img node_modules/iobroker
