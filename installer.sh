@@ -152,7 +152,7 @@ set_npm_python() {
 		write_to_file "$NPMRC_FILE" .npmrc
 		# Append the line to change the python binary
 		append_to_file "# change link from python3 to python2.7 (needed for gyp)" .npmrc
-		append_to_file "python=$(which python2)" .npmrc
+		append_to_file "python=/usr/local/bin/python2.7" .npmrc
 	fi
 	# Make sure that npm can access the .npmrc
 	if [ "$HOST_PLATFORM" = "osx" ]; then
