@@ -1,3 +1,5 @@
+set -x
+
 IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
 cd $IOB_DIR
 

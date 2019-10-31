@@ -2,6 +2,8 @@ freebsd_instance:
   image_family: freebsd-12-0
  
 task:
+  install_bash_script:
+    - pkg install -y bash
   prepare_install_script:
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker
@@ -14,7 +16,7 @@ task:
     - sudo chmod +x travis/travis_install.sh
     # make sure the iob_not_installed file can be created
     - sudo chmod 777 .
-    - csh -x travis/travis_install.sh
+    - bash travis/travis_install.sh
   prepare_test_script:
     # Remember the test dir
     - TEST_DIR=$(pwd) && echo "$TEST_DIR"
@@ -23,10 +25,10 @@ task:
       if [ ! -e iob_not_installed ]; then
         # Test file permissions now...
         sudo chmod +x travis/travis_testFiles.sh
-        csh -e -x travis/travis_testFiles.sh
+        bash travis/travis_testFiles.sh
         # ...because this will change them
         sudo chmod +x travis/travis_prepareTest.sh
-        csh -x travis/travis_prepareTest.sh
+        bash travis/travis_prepareTest.sh
       fi
   test_script:
     # only continue tests if ioBroker was actually installed
@@ -52,8 +54,8 @@ task:
         ls -la
         # Run the fixer
         sudo chmod +x ./fix_installation.sh
-        sudo env "PATH=$PATH" csh ./fix_installation.sh
+        sudo env "PATH=$PATH" bash ./fix_installation.sh
         # Test file permissions again...
         sudo chmod +x travis/travis_testFiles.sh
-        csh -e -x travis/travis_testFiles.sh
+        bash travis/travis_testFiles.sh
       fi
