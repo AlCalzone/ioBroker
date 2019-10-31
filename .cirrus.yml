@@ -3,7 +3,8 @@ freebsd_instance:
  
 task:
   prepare_install_script:
-    - pkg install -y bash node-10.16.3 npm
+    # Alternatively: node10-10.16.3
+    - pkg install -y bash npm-node10 www/npm-node10
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker
     - mv img node_modules/iobroker
