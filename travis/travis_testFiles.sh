@@ -1,4 +1,4 @@
-IOB_DIR=`[ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker"`
+IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
 cd $IOB_DIR
 
 # On linux, the iobroker user must be able to access the files
@@ -17,7 +17,7 @@ fi
 # All files in $IOB_DIR must belong to $IOB_USER and be readable
 shopt -s dotglob # include dotfiles in *.* glob
 for file in *.*; do
-	[ `ls -la | grep $file | tr -s ' ' | cut -d ' ' -f3` = "$IOB_USER" ] # has the correct owner
+	[ $(ls -la | grep $file | tr -s ' ' | cut -d ' ' -f3) = "$IOB_USER" ] # has the correct owner
 	$TEST_CMD -r $file # is readable
 done
 
