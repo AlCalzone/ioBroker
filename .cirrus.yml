@@ -3,7 +3,9 @@ freebsd_instance:
  
 task:
   prepare_install_script:
-    - pkg install -y bash node-10 npm
+    - pkg search node-10
+    - node_ver=`pkg search node-10 | cut -d" " -f1`
+    - pkg install -y bash "$node_ver" npm
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker
     - mv img node_modules/iobroker
@@ -18,7 +20,7 @@ task:
     - bash travis/travis_install.sh
   prepare_test_script:
     # Remember the test dir
-    - TEST_DIR=$(pwd) && echo "$TEST_DIR"
+    - TEST_DIR=`pwd` && echo "$TEST_DIR"
     # only continue tests if ioBroker was actually installed
     - |
       if [ ! -e iob_not_installed ]; then
