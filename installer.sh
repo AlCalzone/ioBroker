@@ -560,7 +560,7 @@ NUM_STEPS=4
 print_step "Installing prerequisites" 1 "$NUM_STEPS"
 
 # update repos
-$SUDOX $INSTALL_CMD update -y
+$SUDOX $INSTALL_CMD update
 
 # Install Node.js if it is not installed
 if [[ $(which "node" 2>/dev/null) != *"/node" ]]; then

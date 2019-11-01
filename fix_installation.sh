@@ -549,7 +549,7 @@ NUM_STEPS=3
 print_step "Installing prerequisites" 1 "$NUM_STEPS"
 
 # update repos
-$SUDOX $INSTALL_CMD update -y
+$SUDOX $INSTALL_CMD update
 
 # Determine the platform we operate on and select the installation routine/packages accordingly 
 # TODO: Which other packages do we need by default?
