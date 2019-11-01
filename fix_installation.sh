@@ -8,9 +8,9 @@ if [[ $EUID -eq 0 ]];
 then IS_ROOT=true;  SUDOX=""
 else IS_ROOT=false; SUDOX="sudo "; fi
 ROOT_GROUP="root"
+USER_GROUP="$USER"
 
 get_platform_params() {
-	set -x
 	# Test which platform this script is being run on
 	# When adding another supported platform, also add detection for the install command
 	# HOST_PLATFORM:  Name of the platform
@@ -49,7 +49,9 @@ get_platform_params() {
 		exit 1
 		;;
 	esac
-	set +x
+	if [ "$IS_ROOT" = true ]; then
+		USER_GROUP="$ROOT_GROUP"
+	fi
 }
 
 install_package_linux() {
@@ -153,7 +155,7 @@ set_npm_python() {
 	if [ "$HOST_PLATFORM" = "osx" ]; then
 		$SUDOX chown -R $USER .npmrc
 	else
-		$SUDOX chown -R $USER:$USER .npmrc
+		$SUDOX chown -R $USER:$USER_GROUP .npmrc
 	fi
 }
 
@@ -656,7 +658,6 @@ install_necessary_packages
 
 # ########################################################
 print_step "Checking ioBroker user and directory permissions" 2 "$NUM_STEPS"
-set -x
 if [ "$USER" != "$IOB_USER" ]; then
 	# Ensure the user "iobroker" exists and is in the correct groups
 	if [ "$HOST_PLATFORM" = "linux" ]; then
@@ -686,7 +687,6 @@ change_npm_command_root
 if [ "$HOST_PLATFORM" != "osx" ]; then
 	fix_dir_permissions
 fi
-set +x
 
 # ########################################################
 print_step "Checking autostart" 3 "$NUM_STEPS"

@@ -8,9 +8,9 @@ if [[ $EUID -eq 0 ]];
 then IS_ROOT=true;  SUDOX=""
 else IS_ROOT=false; SUDOX="sudo "; fi
 ROOT_GROUP="root"
+USER_GROUP="$USER"
 
 get_platform_params() {
-	set -x
 	# Test which platform this script is being run on
 	# When adding another supported platform, also add detection for the install command
 	# HOST_PLATFORM:  Name of the platform
@@ -49,7 +49,9 @@ get_platform_params() {
 		exit 1
 		;;
 	esac
-	set +x
+	if [ "$IS_ROOT" = true ]; then
+		USER_GROUP="$ROOT_GROUP"
+	fi
 }
 
 install_package_linux() {
@@ -1075,7 +1077,7 @@ change_npm_command_root
 unset AUTOMATED_INSTALLER
 
 # Detect IP address
-IP=detect_ip_address
+IP=$(detect_ip_address)
 print_bold "${green}ioBroker was installed successfully${normal}" "Open http://$IP:8081 in a browser and start configuring!"
 
 print_msg "${yellow}You need to re-login before doing anything else on the console!${normal}"
