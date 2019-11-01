@@ -949,6 +949,8 @@ elif [ "$INITSYSTEM" = "systemd" ]; then
 elif [ "$INITSYSTEM" = "rc.d" ]; then
 	echo "Enabling autostart..."
 
+	PIDFILE="$CONTROLLER_DIR/lib/iobroker.pid"
+
 	# Write an rc.d service that automatically detects the correct node executable and runs ioBroker
 	RCD_FILE=$(cat <<- EOF
 		#!$BASH_CMDLINE
@@ -965,10 +967,7 @@ elif [ "$INITSYSTEM" = "rc.d" ]; then
 		load_rc_config \$name
 
 		iobroker_enable=\${iobroker_enable-"NO"}
-		iobroker_pidfile=\${iobroker_pidfile-"$CONTROLLER_DIR/lib/iobroker.pid"}
-
-		PIDF=$CONTROLLER_DIR/lib/iobroker.pid
-		NODECMD=\`which node\`
+		iobroker_pidfile=\${iobroker_pidfile-"$PIDFILE"}
 
 		iobroker_start()
 		{
@@ -1000,6 +999,10 @@ elif [ "$INITSYSTEM" = "rc.d" ]; then
 	SERVICE_FILENAME="/usr/local/etc/rc.d/iobroker"
 	write_to_file "$RCD_FILE" $SERVICE_FILENAME
 	set_root_permissions $SERVICE_FILENAME
+
+	# Make sure that $IOB_USER may access the pidfile
+	$SUDOX touch "$PIDFILE"
+	$SUDOX chown $IOB_USER:$IOB_USER $PIDFILE
 
 	# Enable startup and start the service
 	sysrc iobroker_enable=YES
