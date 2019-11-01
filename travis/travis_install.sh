@@ -54,7 +54,11 @@ fi
 
 # Now test the actual installation using the installer script
 # Therefore pack the local copy of the package
+echo "$pwd"
 TARBALL=$(cd node_modules/iobroker && npm pack --loglevel error)
+echo "$pwd"
+ls -la
+ls -la node_modules/iobroker
 sudo chmod +x node_modules/iobroker/installer.sh
 # and install that
 env "PATH=$PATH:$NPM" "INSTALL_TARGET=$PWD/node_modules/iobroker/$TARBALL" node_modules/iobroker/installer.sh; export EXIT_CODE=$?
