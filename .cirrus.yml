@@ -12,6 +12,7 @@ task:
     - mv lib node_modules/iobroker
     - mv wiki node_modules/iobroker
     - mv package.json node_modules/iobroker
+    - mv installer.sh node_modules/iobroker
   install_script:
     - sudo chmod +x travis/travis_install.sh
     # make sure the iob_not_installed file can be created
@@ -35,7 +36,7 @@ task:
     - |
       if [ ! -e iob_not_installed ]; then
         # Move the test files to the correct location
-        IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
+        IOB_DIR=`[ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker"`
         mv test $IOB_DIR/test
         # And perform the tests
         cd $IOB_DIR
@@ -45,7 +46,7 @@ task:
     - |
       if [ ! -e iob_not_installed ]; then
         # Stop ioBroker processes before running the fixer
-        IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
+        IOB_DIR=`[ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker"`
         cd $IOB_DIR
         node node_modules/iobroker.js-controller/iobroker.js stop
         sleep 60
