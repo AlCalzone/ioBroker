@@ -20,7 +20,9 @@ task:
     - bash travis/travis_install.sh
   prepare_test_script:
     # Remember the test dir
-    - TEST_DIR=`pwd` && echo "$TEST_DIR"
+    - TEST_DIR=`pwd`
+    - 'echo "contents of $TEST_DIR:"'
+    - ls -la
     # only continue tests if ioBroker was actually installed
     - |
       if [ ! -e iob_not_installed ]; then
@@ -43,6 +45,7 @@ task:
         node_modules/mocha/bin/mocha --exit
       fi
     # Now test that the fixer does what it should
+    - find / -iname "fix_installation.sh"
     - |
       if [ ! -e iob_not_installed ]; then
         # Stop ioBroker processes before running the fixer
