@@ -19,10 +19,6 @@ task:
     - sudo chmod 777 .
     - bash travis/travis_install.sh
   prepare_test_script:
-    # Remember the test dir
-    - TEST_DIR=`pwd`
-    - 'echo "contents of $TEST_DIR:"'
-    - ls -la
     # only continue tests if ioBroker was actually installed
     - |
       if [ ! -e iob_not_installed ]; then
@@ -34,6 +30,8 @@ task:
         bash travis/travis_prepareTest.sh
       fi
   test_script:
+    # Remember the test dir
+    - TEST_DIR=`pwd`
     # only continue tests if ioBroker was actually installed
     - |
       if [ ! -e iob_not_installed ]; then
@@ -55,8 +53,6 @@ task:
         sleep 60
         #
         cd $TEST_DIR
-        echo "contents of $TEST_DIR:"
-        ls -la
         # Run the fixer
         sudo chmod +x ./fix_installation.sh
         sudo env "PATH=$PATH" bash ./fix_installation.sh
