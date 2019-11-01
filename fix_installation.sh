@@ -581,7 +581,6 @@ install_necessary_packages() {
 		# Give nodejs access to protected ports and raw devices like ble
 		cmdline="$SUDOX setcap"
 
-		set -x
 		if running_in_docker; then
 			capabilities=$(grep ^CapBnd /proc/$$/status)
 			if [[ $(capsh --decode=${capabilities:(-16)}) == *"cap_net_admin"* ]]; then
@@ -596,7 +595,6 @@ install_necessary_packages() {
 		else
 			$cmdline 'cap_net_admin,cap_net_bind_service,cap_net_raw+eip' $(eval readlink -f `which node`)
 		fi
-		set +x
 		;;
 	"freebsd")
 		declare -a packages=(
@@ -658,6 +656,7 @@ install_necessary_packages
 
 # ########################################################
 print_step "Checking ioBroker user and directory permissions" 2 "$NUM_STEPS"
+set -x
 if [ "$USER" != "$IOB_USER" ]; then
 	# Ensure the user "iobroker" exists and is in the correct groups
 	if [ "$HOST_PLATFORM" = "linux" ]; then
@@ -687,6 +686,7 @@ change_npm_command_root
 if [ "$HOST_PLATFORM" != "osx" ]; then
 	fix_dir_permissions
 fi
+set +x
 
 # ########################################################
 print_step "Checking autostart" 3 "$NUM_STEPS"
