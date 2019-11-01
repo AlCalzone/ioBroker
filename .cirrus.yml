@@ -55,6 +55,7 @@ task:
         sleep 60
         #
         cd $TEST_DIR
+        echo "contents of $TEST_DIR:"
         ls -la
         # Run the fixer
         sudo chmod +x ./fix_installation.sh
