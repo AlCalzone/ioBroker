@@ -3,7 +3,6 @@ freebsd_instance:
  
 task:
   prepare_install_script:
-    # Alternatively: node10-10.16.3
     - pkg install -y bash node npm libnghttp2
     - mkdir -p node_modules/iobroker
     - mv doc node_modules/iobroker

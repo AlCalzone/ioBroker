@@ -1,3 +1,4 @@
+#!/bin/bash
 set -x
 
 export NPM=$(which npm)
