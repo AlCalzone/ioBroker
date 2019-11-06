@@ -739,6 +739,11 @@ if [ "$HOST_PLATFORM" = "freebsd" ]; then
 	set_npm_python
 fi
 
+echo "Contents of $(pwd):"
+ls -la
+echo "Contents of .npmrc:"
+cat "$IOB_DIR/.npmrc"
+
 # download the installer files and run them
 # If this script is run as root, we need the --unsafe-perm option
 if [ "$IS_ROOT" = true ]; then
