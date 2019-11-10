@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # Increase this version number whenever you update the installer
 INSTALLER_VERSION="2019-11-03" # format YYYY-MM-DD
 
@@ -738,11 +736,6 @@ if [ "$HOST_PLATFORM" = "freebsd" ]; then
 	# Make sure we use the correct python binary
 	set_npm_python
 fi
-
-echo "Contents of $(pwd):"
-ls -la
-echo "Contents of .npmrc:"
-cat "$IOB_DIR/.npmrc"
 
 # download the installer files and run them
 # If this script is run as root, we need the --unsafe-perm option
